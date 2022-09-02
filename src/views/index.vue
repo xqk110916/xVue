@@ -2,7 +2,11 @@
   <div class="table_wrapper">
     <div class="xTable-auto">
       <search-bar class="search_bar" :datas="config" :params.sync="params" :query="getData"></search-bar>
-      <x-table class="x-table" :datas="datas" :config="config"></x-table>
+      <x-table class="x-table" :datas="datas" :config="config">
+        <template #sex="slotProps">
+          <el-switch v-model="slotProps.value" :active-value="0" :inactive-value="1"></el-switch>
+        </template>
+      </x-table>
     </div>
     
     <!-- <test :datas="datas" :config="config"></test> -->
@@ -19,16 +23,18 @@
     },
     data() {
       return {
-        value: '123',
+        value: '',
         params: {
           name: 'zs'
         },
         config: [
-          { prop: 'name', type: 'text', label: '姓名' },
+          { prop: 'name', type: 'text', label: '姓名', class: 'title', click: (row) => { console.log(row) }},
           { prop: 'age', type: 'text', label: '年龄' },
-          { prop: 'sex', type: 'text', label: '性别' },
+          { prop: 'sex', type: 'slot', label: '性别' },
         ],
         datas: [
+          { name: '张三张三张三张三张三张三张三张三张三张三张三张三张三张三', age: '18', sex: 1 },
+          { name: '', age: '18', sex: 0 },
           { name: 'zs', age: '18', sex: 1 },
           { name: 'zs', age: '18', sex: 1 },
           { name: 'zs', age: '18', sex: 1 },
@@ -49,14 +55,22 @@
           { name: 'zs', age: '18', sex: 1 },
           { name: 'zs', age: '18', sex: 1 },
           { name: 'zs', age: '18', sex: 1 },
-          { name: 'zs', age: '18', sex: 1 },
-          { name: 'zs', age: '18', sex: 1 },
-        ]
+        ],
+        option: {
+          column: [{
+            label: '姓名',
+            prop: 'name',
+            headerslot:true,
+          }, {
+            label: '年龄',
+            prop: 'sex'
+          }]
+        },
       }
     },
     methods: {
-      fun() {
-        console.log(this.params)
+      fun(val) {
+        return val + '132'
       },
       getData() {
         console.log("getData")

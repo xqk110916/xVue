@@ -4,7 +4,12 @@ import router from './router'
 import store from './store'
 import './plugins/element.js'
 
+import aVue from '@smallwei/avue'
+import '@smallwei/avue/lib/index.css'
+
 Vue.config.productionTip = false
+
+Vue.use(aVue)
 
 new Vue({
   router,
