@@ -1,0 +1,71 @@
+<template>
+  <div class="x-searchBar">
+    <child 
+      v-for="item in datas"
+      :key="item.prop" 
+      :value.sync="formData[item.prop]"
+      :label="item.label"
+    ></child>
+    <el-button type="primary" size="small" @click="getData"> 查询 </el-button>
+    <el-button size="small" @click="resetParams" v-if="reset"> 重置 </el-button>
+  </div>
+</template>
+
+<script>
+  import child from './child.vue'
+  export default {
+    components: {
+      child
+    },
+    props: {
+      datas: {
+        type: Array
+      },
+      params: {
+        type: Object
+      },
+      value: {
+        type: String
+      },
+      reset: {
+        type: Boolean,
+        default: true
+      }
+    },
+    computed: {
+      formData() {
+        if(this.datas && this.datas.length) {
+          let paramsKeys = Object.keys(this.params)
+          this.datas.forEach(item => {
+            if(paramsKeys.findIndex(key => item.prop === key) === -1) {
+              let defaultValue = item.default || ''
+              this.$set(this.params, item.prop, defaultValue)
+            }
+          })
+          console.log(this.params)
+        }
+        return this.params
+      }
+    },
+    data() {
+      return {
+        val: '132'
+      }
+    },
+    methods: {
+      getData() {},
+      resetParams() {
+        this.datas.forEach(item => {
+          let defaultValue = item.default || ''
+          this.params[item.prop] = defaultValue
+        })
+      }
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+.x-searchBar {
+  padding: 15px 10px;
+}
+</style>
