@@ -5,6 +5,8 @@
       :key="item.prop" 
       :value.sync="formData[item.prop]"
       :label="item.label"
+      :type="item.type"
+      :option="item.options"
     ></child>
     <el-button type="primary" size="small" @click="getData"> 查询 </el-button>
     <el-button size="small" @click="resetParams" v-if="reset"> 重置 </el-button>
@@ -24,9 +26,6 @@
       params: {
         type: Object
       },
-      value: {
-        type: String
-      },
       reset: {
         type: Boolean,
         default: true
@@ -42,7 +41,6 @@
               this.$set(this.params, item.prop, defaultValue)
             }
           })
-          console.log(this.params)
         }
         return this.params
       }
@@ -53,7 +51,9 @@
       }
     },
     methods: {
-      getData() {},
+      getData() {
+        this.$emit("query")
+      },
       resetParams() {
         this.datas.forEach(item => {
           let defaultValue = item.default || ''

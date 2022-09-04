@@ -7,6 +7,7 @@
       @row-click="rowClick"
       @row-dblclick="rowDBClick"
       @cell-click="cellClick"
+      :header-cell-style="{ 'textAlign': align }"
     >
       <el-table-column type="index" label="#"></el-table-column>
       <el-table-column 
@@ -14,22 +15,27 @@
         :key="item.prop" 
         :prop="item.prop" 
         :label="item.label"
+        :fixed="item.fixed"
+        :width="item.width"
       >
         <template slot-scope="scope">
           <div
             :style="{'text-align': item.align }"
             :class="['cell_text', item.class ]" 
-            :title="handleValue(item, scope.row)" 
             @click="clickText(item, scope.row)"
           >
             <template v-if="item.type !== 'slot'">
               <slot :name="item.prop + 'Pre'" :row="scope.row" :prop="item.prop" :value="scope.row[item.prop]"></slot>
-              <span> {{ handleValue(item, scope.row) }} </span>
-            </template>
+              <span :title="handleValue(item, scope.row)" > {{ handleValue(item, scope.row) }} </span>
+              <btn-list :option="item.option" :row="scope.row"></btn-list>
+            </template> 
             <slot :name="item.prop" :row="scope.row" :prop="item.prop" :value="scope.row[item.prop]"></slot>
           </div>
         </template>
       </el-table-column>
+      <template slot="empty">
+        <el-empty description="暂无数据"></el-empty>
+      </template>
     </el-table>
   </div>
   
@@ -45,6 +51,7 @@
   // Function 
   // handle 参数为当前行数据
   // click  参数为当前行数据
+  import btnList from '@/components/btnList/index'
   export default {
     props: {
       datas: {
@@ -52,7 +59,13 @@
       },
       config: {
         type: Array
+      },
+      align: {
+        type: String
       }
+    },
+    components: {
+      btnList
     },
     data() {
       return {
@@ -69,8 +82,8 @@
         this.row = row
         this.$emit("rowDBClick", row, column)
       },
-      cellClick(row, column, cell) {
-        this.$emit("cellClick", row, column, cell)
+      cellClick() {
+        this.$emit("cellClick", arguments)
       },
       // 内容处理
       clickText(item, row) {
@@ -97,29 +110,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.operation_text {
-  cursor: pointer;
-}
-.title {
-  @extend .operation_text;
-  color: #409EFF;
-}
-.success {
-  @extend .operation_text;
-  color: #67C23A;
-}
-.error {
-  @extend .operation_text;
-  color: #F56C6C;
-}
-.warn {
-  @extend .operation_text;
-  color: #E6A23C;
-}
-.info {
-  @extend .operation_text;
-  color: #909399;
-}
+
 </style>
 <style lang="scss">
   .xTable-auto {

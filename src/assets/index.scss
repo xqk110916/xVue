@@ -1,0 +1,28 @@
+.operation_text {
+  cursor: pointer;
+}
+.primary {
+  @extend .operation_text;
+  cursor: pointer;
+  color: #409EFF !important;
+}
+.success {
+  @extend .operation_text;
+  cursor: pointer;
+  color: #67C23A !important;
+}
+.danger {
+  @extend .operation_text;
+  cursor: pointer;
+  color: #F56C6C !important;
+}
+.warning {
+  @extend .operation_text;
+  cursor: pointer;
+  color: #E6A23C !important;
+}
+.info {
+  @extend .operation_text;
+  cursor: pointer;
+  color: #909399 !important;
+}
