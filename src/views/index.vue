@@ -1,6 +1,6 @@
 <template>
   <div class="table_wrapper">
-    <div class="xTable-auto">
+    <!-- <div class="xTable-auto">
       <search-bar class="search_bar" :datas="config" :params.sync="params" @query="getData"></search-bar>
       <div>
         <el-button type="primary" size="small" @click="fun"> 新增 </el-button>
@@ -12,9 +12,11 @@
         </template>
       </x-table>
       <x-pagination :params="params" :query="getData"></x-pagination>
-    </div>
+    </div> -->
     
     <!-- <test :datas="datas" :config="config"></test> -->
+
+    <crud :datas="datas"></crud>
   </div>
 </template>
 
@@ -24,9 +26,10 @@
   import xPagination from '@/components/pagination'
   import test from '@/components/test'
   import { getData } from '@/api/index'
+  import crud from '@/components/crud'
   export default {
     components: {
-      searchBar, xTable, xPagination, test
+      searchBar, xTable, xPagination, test, crud
     },
     data() {
       return {

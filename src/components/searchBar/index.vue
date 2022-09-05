@@ -68,4 +68,7 @@
 .x-searchBar {
   padding: 15px 10px;
 }
+.el-button + .el-button {
+  margin-left: 10px;
+}
 </style>

@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div :class="{ inner: 'inner' }">
     <el-button 
       v-for="(item, index) in showOption"
       :key="index"
-      type="text"
+      :type="inner ? 'text' : item.type"
       :class="[ item.type ]"
       :disabled="item.disabled ? item.disabled(row) : false"
       @click="item.handle(row)"
     > {{ item.label }} </el-button>
     
-    <el-dropdown class="" v-if="option?.length > max" @command="handleCommand">
+    <el-dropdown v-if="showDropdown" @command="handleCommand">
       <span class="primary ml"> ... </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item
@@ -44,6 +44,11 @@
       max: {
         type: Number,
         default: 3
+      },
+      // inner为true代表table中的text
+      inner: {
+        type: Boolean,
+        dafault: false
       }
     },
     computed: {
@@ -52,6 +57,9 @@
       },
       shrinkOption() {
         return this.option?.length > this.max ? this.option.slice(this.max, this.option.length) : []
+      },
+      showDropdown() {
+        return this.inner && this.option && this.option.length > this.max
       }
     },
     methods: {
@@ -65,5 +73,13 @@
 <style lang="scss" scoped>
 .ml {
   margin-left: 10px;
+}
+.el-button + .el-button {
+  margin-left: 10px;
+}
+.inner {
+  .el-button + .el-button {
+    margin-left: 5px;
+  }
 }
 </style>

@@ -27,7 +27,7 @@
             <template v-if="item.type !== 'slot'">
               <slot :name="item.prop + 'Pre'" :row="scope.row" :prop="item.prop" :value="scope.row[item.prop]"></slot>
               <span :title="handleValue(item, scope.row)" > {{ handleValue(item, scope.row) }} </span>
-              <btn-list :option="item.option" :row="scope.row"></btn-list>
+              <btn-list :option="item.option" :row="scope.row" inner></btn-list>
             </template> 
             <slot :name="item.prop" :row="scope.row" :prop="item.prop" :value="scope.row[item.prop]"></slot>
           </div>
