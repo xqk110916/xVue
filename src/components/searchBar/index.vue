@@ -1,12 +1,12 @@
 <template>
   <div class="x-searchBar">
     <child 
-      v-for="item in datas"
+      v-for="item in searchDatas"
       :key="item.prop" 
       :value.sync="formData[item.prop]"
       :label="item.label"
       :type="item.type"
-      :option="item.options"
+      :options="item.options"
     ></child>
     <el-button type="primary" size="small" @click="getData"> 查询 </el-button>
     <el-button size="small" @click="resetParams" v-if="reset"> 重置 </el-button>
@@ -15,6 +15,7 @@
 
 <script>
   import child from './child.vue'
+  import { clone } from '../utils'
   export default {
     components: {
       child
@@ -43,6 +44,15 @@
           })
         }
         return this.params
+      },
+      searchDatas() {
+        let data = clone(this.datas)
+        return data.map(item => {
+          if(item.type.startsWith("slot:")) {
+            item.type = item.type.replace("slot:", '')
+          }
+          return item
+        })
       }
     },
     data() {

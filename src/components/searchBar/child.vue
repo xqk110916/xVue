@@ -15,7 +15,7 @@
       size="small" 
       :clearable="clearable" 
       :multiple="multiple" 
-      :placeholder="`请选择${label}}`"
+      :placeholder="`请选择${label}`"
     >
       <el-option
         v-for="item in options"
@@ -34,6 +34,16 @@
       :value-format="valueForamt"
       :placeholder="`请选择${label}}`"
     ></el-date-picker>
+
+    <el-date-picker
+      v-if="type === 'daterange'"
+      v-model="childValue"
+      type="daterange"
+      range-separator="至"
+      :value-format="valueForamt"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期">
+    </el-date-picker>
   </div>
 </template>
 

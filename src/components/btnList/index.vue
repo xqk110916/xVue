@@ -1,10 +1,11 @@
 <template>
-  <div :class="{ inner: 'inner' }">
+  <div :class="[ inner ? 'inner' : 'list' ]">
     <el-button 
       v-for="(item, index) in showOption"
       :key="index"
       :type="inner ? 'text' : item.type"
-      :class="[ item.type ]"
+      :size="size"
+      :class="{ [item.type]: inner }"
       :disabled="item.disabled ? item.disabled(row) : false"
       @click="item.handle(row)"
     > {{ item.label }} </el-button>
@@ -16,6 +17,7 @@
           v-for="(list, index) in shrinkOption"
           :key="index"
           :command="list"
+          :class="[ list.type ]"
           :disabled="list.disabled ? list.disabled(row) : false"
         > {{ list.label }} </el-dropdown-item>
       </el-dropdown-menu>
@@ -49,22 +51,28 @@
       inner: {
         type: Boolean,
         dafault: false
+      },
+      size: {
+        type: String,
+        default: 'small'
       }
     },
     computed: {
-      showOption() {
-        return this.option?.slice(0, this.max)
-      },
-      shrinkOption() {
-        return this.option?.length > this.max ? this.option.slice(this.max, this.option.length) : []
-      },
+      // 在inner模式下, 超出最大值的隐藏, 显示省略号
       showDropdown() {
         return this.inner && this.option && this.option.length > this.max
-      }
+      },
+      showOption() {
+        return this.showDropdown ? this.option?.slice(0, this.max) : this.option
+      },
+      shrinkOption() {
+        return this.showDropdown ? this.option.slice(this.max, this.option.length) : []
+      },
     },
     methods: {
       handleCommand(command) {
         console.log(command)
+        command.handle(this.row)
       }
     },
   }
@@ -82,4 +90,7 @@
     margin-left: 5px;
   }
 }
+// .list {
+  // margin: 10px;
+// }
 </style>

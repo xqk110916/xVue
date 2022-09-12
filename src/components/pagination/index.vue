@@ -2,10 +2,10 @@
   <div class="pagination_warpper" :style="{ textAlign: align }">
     <el-pagination
       @current-change="handleCurrentChange"
-      :current-page.sync="params.currentPage"
-      :page-size="params.pageSize"
+      :current-page.sync="pageParams.currentPage"
+      :page-size="pageParams.pageSize"
       layout="total, prev, pager, next"
-      :total="params.total"
+      :total="total"
       :hide-on-single-page="hideOnSinglePage"
     >
     </el-pagination>
@@ -15,19 +15,12 @@
 <script>
   export default {
     props: {
-      params: {
-        type: Object,
-        default: () => {
-          return {
-            currentPage: 1,
-            pageSize: 10,
-            total: 0,
-          }
-        }
+      pages: {
+        type: Object
       },
-      // 挂载的请求函数, 翻页时会去调用
-      query: {
-        type: Function
+      total: {
+        type: Number | String,
+        default: 0
       },
       hideOnSinglePage: {
         type: Boolean,
@@ -38,6 +31,14 @@
         default: 'right'
       }
     },
+    computed: {
+      pageParams() {
+        let { currentPage, pageSize } = this.pages
+        if(!currentPage) this.$set(this.pages, "currentPage", 1 )
+        if(!pageSize) this.$set(this.pages, "pageSize", 20 )
+        return this.pages
+      }
+    },
     data() {
       return {
         
@@ -45,8 +46,7 @@
     },
     methods: {
       handleCurrentChange(val) {
-        console.log(val, this.params, this.query)
-        this.query()
+        this.$emit("query", this.pages)
         this.$emit("current-change", ...arguments)
       }
     }
@@ -54,5 +54,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+.pagination_warpper {
+  padding: 10px 0;
+}
 </style>

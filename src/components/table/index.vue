@@ -1,15 +1,18 @@
 <template>
   <div class="x-table_wrapper">
     <el-table 
+      ref="table"
       :data="datas" 
       style="width: 100%;" height="100%"
       border highlight-current-row 
       @row-click="rowClick"
       @row-dblclick="rowDBClick"
       @cell-click="cellClick"
+      @selection-change="handleSelectionChange"
       :header-cell-style="{ 'textAlign': align }"
     >
-      <el-table-column type="index" label="#"></el-table-column>
+      <el-table-column v-if="option.selection" type="selection" label="#"></el-table-column>
+      <el-table-column v-if="!option.index" type="index" label="#"></el-table-column>
       <el-table-column 
         v-for="item in config" 
         :key="item.prop" 
@@ -24,10 +27,10 @@
             :class="['cell_text', item.class ]" 
             @click="clickText(item, scope.row)"
           >
-            <template v-if="item.type !== 'slot'">
+            <template v-if="!item.type?.startsWith('slot:')">
               <slot :name="item.prop + 'Pre'" :row="scope.row" :prop="item.prop" :value="scope.row[item.prop]"></slot>
               <span :title="handleValue(item, scope.row)" > {{ handleValue(item, scope.row) }} </span>
-              <btn-list :option="item.option" :row="scope.row" inner></btn-list>
+              <btn-list :option="item.options" :row="scope.row" inner></btn-list>
             </template> 
             <slot :name="item.prop" :row="scope.row" :prop="item.prop" :value="scope.row[item.prop]"></slot>
           </div>
@@ -57,8 +60,8 @@
       datas: {
         type: Array
       },
-      config: {
-        type: Array
+      option: {
+        type: Object
       },
       align: {
         type: String
@@ -67,12 +70,21 @@
     components: {
       btnList
     },
+    computed: {
+      config() {
+        return this.option.column
+      }
+    },
     data() {
       return {
         row: null,
+        checkedRows: {}
       }
     },
     methods: {
+      handleTableEvent(event, payload) {
+        return this.$refs.table[event](...payload)
+      },
       // 表格事件处理
       rowClick(row, column) {
         this.row = row
@@ -84,6 +96,10 @@
       },
       cellClick() {
         this.$emit("cellClick", arguments)
+      },
+      handleSelectionChange(val) {
+        this.checkedRows = val
+        this.$emit("selectionChange", val)
       },
       // 内容处理
       clickText(item, row) {
