@@ -2,18 +2,20 @@
   <el-dialog
     custom-class="x-dialog"
     :show-close="false"
-    title="dialog"
+    :title="title"
     :visible.sync="visible"
-    width="800px"
+    :width="width + 'px'"
     :before-close="beforeClose"
   >
     <div class="close" @click="beforeClose"> {{ closeText }} </div>
     <slot></slot>
-    <div slot="footer" class="footer">
-      <el-button size="small" @click="beforeClose">取 消</el-button>
-      <el-button v-if="isReset" size="small" type="primary" @click="enter">重 置</el-button>
-      <el-button size="small" type="primary" @click="enter">确 定</el-button>
-    </div>
+    <slot name="footer">
+      <div slot="footer" class="footer">
+        <el-button size="small" @click="beforeClose">取 消</el-button>
+        <el-button v-if="reset" size="small" type="primary" @click="handleReset">重 置</el-button>
+        <el-button size="small" type="primary" @click="enter">确 定</el-button>
+      </div>
+    </slot>
   </el-dialog>
 </template>
 
@@ -25,9 +27,14 @@
     },
     props: {
       title: {
-        type: String
+        type: String,
+        default: '编辑'
       },
-      isReset: {
+      width: {
+        type: String | Number,
+        default: 800
+      },
+      reset: {
         type: Boolean,
         default: false
       },
@@ -36,6 +43,10 @@
       },
       'before-close': {
         type: Function
+      },
+      appendToBody: {
+        type: Boolean,
+        default: false
       },
       closeText: {
         type: String,
@@ -49,10 +60,10 @@
     },
     methods: {
       enter() {
-        
+        this.$emit("enter")
       },
-      reset() {
-        
+      handleReset() {
+        this.$emit("reset")
       },
     }
   }
@@ -62,9 +73,7 @@
 .x-dialog {
   position: relative;
 
-  .el-dialog__title {
-    font-size: 14px;
-  }
+  
 
   .close {
     position: absolute;

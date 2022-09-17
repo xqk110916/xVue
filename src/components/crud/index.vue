@@ -1,11 +1,17 @@
 <template>
   <div class="x-crud_warpper">
-    <search-bar class="search_bar" :datas="searchConfig" :params.sync="searchParams" @query="getData"></search-bar>
+    <search-bar class="search_bar" :datas="searchConfig" :params.sync="searchParams" @query="getData">
+      <slot name="search"></slot>
+    </search-bar>
     <btn-list class="btns" :option="option.btns" size="small"></btn-list>
     <slot>
       <x-table class="x-table" :datas="datas" :option="option" @selectionChange="handleSelectionChange"></x-table>
     </slot>
     <x-pagination v-if="option.page" :pages.sync="pages" @query="getData" :total="pages?.total"></x-pagination>
+
+    <x-dialog :visible.sync="dialogVisible" :before-close="() => { this.dialogVisible = false }">
+      <edit-form :formData="formData" :column="12"></edit-form>
+    </x-dialog>
   </div>
 </template>
 
@@ -15,10 +21,15 @@
   import xPagination from '@/components/pagination'
   import btnList from '@/components/btnList'
   import { clone } from '../utils'
+  import { editExcludeType } from '../utils/config'
   export default {
     props: {
       option: {
         type: Object
+      },
+      searchParams: {
+        type: Object,
+        default: () => { return {} }
       },
       pages: {
         type: Object,
@@ -26,20 +37,26 @@
       },
       datas: {
         type: Array
-      }
+      },
     },
     components: {
       searchBar, xTable, xPagination, btnList
     },
     data() {
       return {
-        searchParams: {}
+        dialogVisible: false,
       }
     },
     computed: {
       searchConfig() {
         console.log(this.option.column.filter(item => item.search))
         return this.option.column.filter(item => item.search)
+      },
+      editConfig() {
+        return this.option.column.filter(item => {
+          let flag = editExcludeType.find( type => item.type)   // 看type类型是否是需要过滤的类型
+
+        })
       }
     },
     methods: {

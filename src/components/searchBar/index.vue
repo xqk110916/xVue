@@ -10,6 +10,7 @@
     ></child>
     <el-button type="primary" size="small" @click="getData"> 查询 </el-button>
     <el-button size="small" @click="resetParams" v-if="reset"> 重置 </el-button>
+    <slot></slot>
   </div>
 </template>
 

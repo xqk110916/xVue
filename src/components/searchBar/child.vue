@@ -50,9 +50,7 @@
 <script>
   export default {
     props: {
-      value: {
-        type: String
-      },
+      value: {},
       label: {
         type: String
       },
@@ -117,7 +115,7 @@
   padding: 0 10px;
   .label {
     font-size: 14px;
-    margin-right: 10px;
+    margin-right: 12px;
     display: inline-block;
   }
 }
